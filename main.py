@@ -1,6 +1,4 @@
 ### Graph - Adjacency list rep.
-# import random
-import queue
 
 ### Adjacency Matrix
 adjacency_matrix = [[0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -36,28 +34,20 @@ print()
 graph = adjacency_list
 
 def dfs(graph, vertex, end, discovered, finished, path, solution):
-  if vertex == end:
-    path.append(vertex)
-    return path
-  if end in graph[vertex]:
-    path += [vertex, end]
-    return path
-  
   discovered.append(vertex)
   path.append(vertex)
+  if vertex == end:
+    if len(path) < len(solution) or len(solution) == 0:
+      solution = list(path)
+  
   for adjacent in graph[vertex]:
     if adjacent not in discovered and adjacent not in finished:
-      path = dfs(graph, adjacent, end, discovered, finished, path, solution)
-    if end in path:
-      if len(solution) == 0:
-        solution = list(path)
-      elif len(path) < len(solution):
-        solution = list(path)
-      # Maybe is not yet finished
-      path.remove(end)
-      path.remove(adjacent)
+      dfs(graph, adjacent, end, discovered, finished, path, solution)
 
+  path.remove(vertex)
   finished.append(vertex)
+  if solution:
+    return solution
   return path
 
 def shortest_path(graph, start, end):
